@@ -16,11 +16,13 @@ class UsersController < ApplicationController
   def create
     ref_code = cookies[:h_ref]
     email = params[:user][:email]
-    @user = User.new(email: email)
+    @generated_password = Devise.friendly_token.first(8)
+    @user = User.new(email: email, password: @generated_password)
     @user.referrer = User.find_by_referral_code(ref_code) if ref_code
 
     if @user.save
       cookies[:h_email] = { value: @user.email }
+      UserMailer.delay.signup_email(@user, @generated_password)
       redirect_to '/refer-a-friend'
     else
       logger.info("Error saving user with email, #{email}")
@@ -31,6 +33,8 @@ class UsersController < ApplicationController
   def refer
     @bodyId = 'refer'
     @is_mobile = mobile_device?
+
+    @user = current_user || @user = User.find_by_email(cookies[:h_email])
 
     @user = User.find_by_email(cookies[:h_email])
 
@@ -56,7 +60,7 @@ class UsersController < ApplicationController
     return if Rails.application.config.ended
 
     email = cookies[:h_email]
-    if email && User.find_by_email(email)
+    if (email && User.find_by_email(email)) || user_signed_in?
       redirect_to '/refer-a-friend'
     else
       cookies.delete :h_email
