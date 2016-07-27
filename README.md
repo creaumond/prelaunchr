@@ -9,6 +9,10 @@ social sharing and has prize levels based on the number of people each person
 refers. By default, we've included our original HTML/CSS for both the site and
 email to give you a better idea of how this looked when actually running.
 
+## What is different about this fork
+
+This version adds a few features. First, this adds a solution to allow users to see their reward levels from any browser or computer. Previously, users had to view their reward levels on the same browser/computer they originally created an account with. Users now will receive a password to log in with in their welcome email. Secondly, this will be a mobile first design updating Prelaunchr to Bootstrap 3. This is currently in progress.
+
 ## Mechanics
 
 Prelaunchr has a main mechanic from which everything else is derived: Every
